@@ -9,12 +9,12 @@ import javax.swing.JTextField;
 
 import model.Critical;
 
-public class AddNotificationView extends JPanel {
+public class AddNotificationPanel extends JPanel {
 	private JTextField textField;
 	private JComboBox<Critical> criticalComboBox;
 	private JButton addButton;
 
-	public AddNotificationView(AddNotificationController controller) {
+	public AddNotificationPanel(AddNotificationController controller) {
 
 		textField = new JTextField(20);
 		textField.setBounds(57, 12, 260, 25);
@@ -38,12 +38,12 @@ public class AddNotificationView extends JPanel {
 		add(addButton);
 
 		addButton.addActionListener(e -> {
-			String msg = textField.getText().trim();
+			String mesaj = textField.getText().trim();
 
 			Critical selectedStatus = (Critical) criticalComboBox.getSelectedItem();
 
-			if (!msg.isEmpty()) {
-				controller.addNotificationWithEnum(msg, selectedStatus);
+			if (!mesaj.isEmpty()) {
+				controller.addNotificationWithEnum(mesaj, selectedStatus);
 				textField.setText("");
 			} else {
 				JOptionPane.showMessageDialog(this, "Lütfen bir mesaj yazın!");

@@ -5,12 +5,12 @@ import model.Notification;
 import ui.NotificationController;
 
 public class AddNotificationController {
-	private AddNotificationView view;
+	private AddNotificationPanel view;
 	private NotificationController controller;
 
 	public AddNotificationController(NotificationController controller) {
 		this.controller = controller;
-		this.view = new AddNotificationView(this);
+		this.view = new AddNotificationPanel(this);
 	}
 
 	public void addNotificationWithEnum(String message, Critical status) {
@@ -22,7 +22,7 @@ public class AddNotificationController {
 		controller.filter();
 	}
 
-	public AddNotificationView getView() {
+	public AddNotificationPanel getView() {
 		return view;
 	}
 }
