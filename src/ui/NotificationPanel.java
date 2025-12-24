@@ -9,6 +9,7 @@ import java.awt.Insets;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -19,6 +20,7 @@ public class NotificationPanel extends JPanel {
 
 	private JTextField txtSearch;
 	private JCheckBox chkCritical, chkWarning;
+	private JComboBox<String> cmbSort;
 	private JPanel pnlList;
 	private JButton btnSearch;
 	private JPanel pnlNotif;
@@ -33,13 +35,13 @@ public class NotificationPanel extends JPanel {
 		setLayout(new BorderLayout(10, 10));
 		JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-		txtSearch = new JTextField(25);
-
+		txtSearch = new JTextField(15);
 		chkCritical = new JCheckBox("Critical");
 		chkCritical.setSelected(true);
-
 		chkWarning = new JCheckBox("Warning");
 		chkWarning.setSelected(true);
+
+		cmbSort = new JComboBox<>(new String[] { "Tarihe Göre", "Önceliğe Göre (C->W)", "Alfabetik (A-Z)" });
 
 		btnSearch = new JButton("Ara");
 
@@ -48,16 +50,15 @@ public class NotificationPanel extends JPanel {
 		topPanel.add(btnSearch);
 		topPanel.add(chkCritical);
 		topPanel.add(chkWarning);
+		topPanel.add(new JLabel("Sırala: "));
+		topPanel.add(cmbSort);
 
 		add(topPanel, BorderLayout.NORTH);
 	}
 
 	private void initListPanel() {
-
 		pnlList = new JPanel();
-
 		JScrollPane scrollPaneNotification = new JScrollPane();
-
 		scrollPaneNotification.setViewportView(pnlList);
 		GridBagLayout gbl_pnlList = new GridBagLayout();
 		gbl_pnlList.columnWeights = new double[] { 1.0 };
@@ -81,6 +82,10 @@ public class NotificationPanel extends JPanel {
 		pnlList.add(pnlFiller, gbc_pnlFiller);
 
 		add(scrollPaneNotification, BorderLayout.CENTER);
+	}
+
+	public JComboBox<String> getCmbSort() {
+		return cmbSort;
 	}
 
 	public JTextField getTxtSearch() {
