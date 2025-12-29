@@ -16,6 +16,7 @@ public class NotificationLinePanel extends JPanel {
 	private JButton btnRead;
 	private JLabel lblMessage;
 	private JLabel lblTimestamp;
+	private JButton btnPinned;
 
 	public NotificationLinePanel() {
 
@@ -49,10 +50,21 @@ public class NotificationLinePanel extends JPanel {
 		gbc_btnRead.gridx = 2;
 		gbc_btnRead.gridy = 0;
 		add(btnRead, gbc_btnRead);
+
+		btnPinned = new JButton("Pin");
+
+		GridBagConstraints gbc_btnPinned = new GridBagConstraints();
+		gbc_btnPinned.anchor = GridBagConstraints.NORTHWEST;
+		add(btnPinned, gbc_btnPinned);
+
 	}
 
 	public JButton getBtnRead() {
 		return btnRead;
+	}
+
+	public JButton getBtnPinned() {
+		return btnPinned;
 	}
 
 	public JLabel getLblMessage() {

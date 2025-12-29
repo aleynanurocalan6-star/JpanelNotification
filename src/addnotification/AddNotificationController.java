@@ -1,25 +1,66 @@
 package addnotification;
 
+import java.util.function.Consumer;
+
+import javax.swing.JOptionPane;
+
 import model.Critical;
 import model.Notification;
-import ui.NotificationController;
 
 public class AddNotificationController {
-	private AddNotificationPanel view;
-	private NotificationController controller;
 
-	public AddNotificationController(NotificationController controller) {
-		this.controller = controller;
-		this.view = new AddNotificationPanel(this);
+	private Consumer<Notification> btnConsumer;
+	private AddNotificationPanel view;
+
+	public AddNotificationController(Consumer<Notification> btnConsumer) {
+		this.btnConsumer = btnConsumer;
+		initView();
 	}
 
-	public void addNotificationWithEnum(String message, Critical status) {
+	private void initView() {
+		this.view = new AddNotificationPanel();
 
-		Notification notification = new Notification(message, status);
+		view.getAddButton().addActionListener(e -> {
+			Notification notification = createNotificationFromPanel();
+			if (notification != null && btnConsumer != null) {
+				btnConsumer.accept(notification);
+				view.getTextField().setText("");
+			}
+		});
 
-		controller.addNotification(notification);
+		view.getBtnFetch().addActionListener(e -> {
+			try {
+				int id = Integer.parseInt(view.getTxtUpdateId().getText());
 
-		controller.filter();
+				JOptionPane.showMessageDialog(view, id + " ID bildirim aranıyor");
+			} catch (NumberFormatException ex) {
+				JOptionPane.showMessageDialog(view, " sayısal ID girin");
+			}
+		});
+
+		view.getBtnUpdate().addActionListener(e -> {
+			String newMessage = view.getTxtUpdateMessage().getText().trim();
+			if (!newMessage.isEmpty()) {
+
+				btnConsumer.accept(null);
+				JOptionPane.showMessageDialog(view, "Bildirim Güncellendi");
+			} else {
+				JOptionPane.showMessageDialog(view, "Yeni mesaj boş olamaz");
+			}
+		});
+	}
+
+	private Notification createNotificationFromPanel() {
+		Notification notification = null;
+		String notificationText = view.getTextField().getText().trim();
+		Critical criticalValue = (Critical) view.getCriticalComboBox().getSelectedItem();
+
+		if (!notificationText.isEmpty()) {
+			notification = new Notification(notificationText, criticalValue);
+		} else {
+			JOptionPane.showMessageDialog(view, " bir mesaj yazın");
+		}
+		return notification;
 	}
 
 	public AddNotificationPanel getView() {

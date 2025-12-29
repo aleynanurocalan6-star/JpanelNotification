@@ -3,9 +3,13 @@ package ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JLabel;
+import javax.swing.plaf.basic.BasicComboBoxRenderer;
+
 import line.NotificationLineController;
 import model.Critical;
 import model.Notification;
+import model.SortKeys;
 
 public class NotificationController {
 
@@ -18,22 +22,47 @@ public class NotificationController {
 	}
 
 	private void initView() {
+
 		view = new NotificationPanel();
+
+		initCmbBxSort();
+
 		initListeners();
 	}
 
+	private void initCmbBxSort() {
+
+		view.getCmbSort().setRenderer(new BasicComboBoxRenderer() {
+
+			public java.awt.Component getListCellRendererComponent(javax.swing.JList<?> list, Object value, int index,
+					boolean isSelected, boolean cellHasFocus) {
+
+				JLabel lbl = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+
+				lbl.setText(((SortKeys) value).getScreenText());
+
+				return lbl;
+
+			};
+		}
+
+		);
+	}
+
 	private void initListeners() {
+
 		view.getBtnSearch().addActionListener(e -> filter());
 		view.getChkCritical().addActionListener(e -> filter());
 		view.getChkWarning().addActionListener(e -> filter());
-
 		view.getCmbSort().addActionListener(e -> filter());
 	}
 
 	public void filter() {
+
 		view.getPnlNotif().removeAll();
 
 		String query = view.getTxtSearch().getText().toLowerCase();
+
 		boolean criticalSelected = view.getChkCritical().isSelected();
 		boolean warningSelected = view.getChkWarning().isSelected();
 
@@ -41,23 +70,28 @@ public class NotificationController {
 
 		for (Notification n : notificationList) {
 
-			if ((n.getMessage().toLowerCase().contains(query))
-					&& ((criticalSelected && n.getCritical() == Critical.CRITICAL)
-							|| (warningSelected && n.getCritical() == Critical.WARNING))) {
+			boolean containsQuery = n.getMessage().toLowerCase().contains(query);
+			boolean criticalFilter = (criticalSelected && n.getCritical() == Critical.CRITICAL)
+					|| (warningSelected && n.getCritical() == Critical.WARNING);
+
+			boolean readStatus = n.isRead() == false;
+
+			if (n.isPinned() || (containsQuery && criticalFilter && readStatus)) {
 
 				filterList.add(n);
 			}
 		}
 
-		int ındex = view.getCmbSort().getSelectedIndex();
-		if (ındex == 1) {
-			filterList.sort((n1, n2) -> n1.getCritical().compareTo(n2.getCritical()));
-		} else if (ındex == 2) {
-			filterList.sort((n1, n2) -> n1.getMessage().compareToIgnoreCase(n2.getMessage()));
-		}
+		filterList.sort(((SortKeys) view.getCmbSort().getSelectedItem()).getComparator());
+		filterList.sort((n1, n2) -> Boolean.compare(n2.isPinned(), n1.isPinned()));
 
 		for (Notification n : filterList) {
-			NotificationLineController lineController = new NotificationLineController(n);
+
+			NotificationLineController lineController = new NotificationLineController(n, notification -> {
+
+				filter();
+			});
+
 			view.getPnlNotif().add(lineController.getView());
 		}
 

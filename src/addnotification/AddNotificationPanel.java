@@ -1,53 +1,95 @@
 package addnotification;
 
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
 import model.Critical;
 
 public class AddNotificationPanel extends JPanel {
+
 	private JTextField textField;
 	private JComboBox<Critical> criticalComboBox;
 	private JButton addButton;
 
-	public AddNotificationPanel(AddNotificationController controller) {
+	private JTextField txtId;
+	private JTextField txtUpdateMessage;
+	private JButton btnFetch;
+	private JButton btnUpdate;
 
-		textField = new JTextField(20);
-		textField.setBounds(57, 12, 260, 25);
+	public AddNotificationPanel() {
+		setLayout(new BorderLayout());
 
+		JPanel pnlAdd = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		pnlAdd.setBorder(BorderFactory.createTitledBorder("Yeni Bildirim Ekle"));
+
+		pnlAdd.add(new JLabel("Mesaj:"));
+		textField = new JTextField(15);
+		pnlAdd.add(textField);
+
+		pnlAdd.add(new JLabel("Durum:"));
 		criticalComboBox = new JComboBox<>(Critical.values());
-		criticalComboBox.setBounds(378, 10, 85, 25);
-		criticalComboBox.setMaximumRowCount(10);
+		pnlAdd.add(criticalComboBox);
 
 		addButton = new JButton("Ekle");
-		addButton.setBounds(475, 9, 59, 26);
-		setLayout(null);
+		pnlAdd.add(addButton);
 
-		JLabel label = new JLabel("Mesaj:");
-		label.setBounds(10, 14, 37, 16);
-		add(label);
-		add(textField);
-		JLabel label_1 = new JLabel("Durum:");
-		label_1.setBounds(330, 14, 41, 16);
-		add(label_1);
-		add(criticalComboBox);
-		add(addButton);
+		JPanel pnlUpdate = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		pnlUpdate.setBorder(BorderFactory.createTitledBorder("Bildirim Güncelle"));
 
-		addButton.addActionListener(e -> {
-			String mesaj = textField.getText().trim();
+		pnlUpdate.add(new JLabel("ID:"));
+		txtId = new JTextField(5);
+		pnlUpdate.add(txtId);
 
-			Critical selectedStatus = (Critical) criticalComboBox.getSelectedItem();
+		btnFetch = new JButton("Getir");
+		pnlUpdate.add(btnFetch);
 
-			if (!mesaj.isEmpty()) {
-				controller.addNotificationWithEnum(mesaj, selectedStatus);
-				textField.setText("");
-			} else {
-				JOptionPane.showMessageDialog(this, "Lütfen bir mesaj yazın!");
-			}
-		});
+		pnlUpdate.add(new JLabel("Yeni Mesaj:"));
+		txtUpdateMessage = new JTextField(15);
+		pnlUpdate.add(txtUpdateMessage);
+
+		btnUpdate = new JButton("Güncelle");
+		pnlUpdate.add(btnUpdate);
+
+		JTabbedPane tabbedPane = new JTabbedPane();
+		tabbedPane.addTab("Ekleme Paneli", pnlAdd);
+		tabbedPane.addTab("Güncelleme Paneli", pnlUpdate);
+
+		add(tabbedPane, BorderLayout.CENTER);
+	}
+
+	public JTextField getTextField() {
+		return textField;
+	}
+
+	public JComboBox<Critical> getCriticalComboBox() {
+		return criticalComboBox;
+	}
+
+	public JButton getAddButton() {
+		return addButton;
+	}
+
+	public JTextField getTxtUpdateId() {
+		return txtId;
+	}
+
+	public JTextField getTxtUpdateMessage() {
+		return txtUpdateMessage;
+	}
+
+	public JButton getBtnFetch() {
+		return btnFetch;
+	}
+
+	public JButton getBtnUpdate() {
+		return btnUpdate;
 	}
 }
