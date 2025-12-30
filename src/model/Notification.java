@@ -3,27 +3,30 @@ package model;
 import java.time.LocalDateTime;
 
 public class Notification {
-
 	private static int totalID = 0;
-
+	private int id;
 	private String message;
 	private boolean read = false;
 	private Critical critical;
 	private LocalDateTime time = LocalDateTime.now();
 	private boolean pinned = false;
-	private int id;
 
 	public Notification(String message, Critical critical) {
 		this.message = message;
 		this.critical = critical;
-		id = totalID++;
-
+		this.id = totalID++;
 	}
 
 	public Notification(String message) {
-
 		this(message, Critical.WARNING);
+	}
 
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public void setCritical(Critical critical) {
+		this.critical = critical;
 	}
 
 	public String getMessage() {
@@ -57,5 +60,4 @@ public class Notification {
 	public void setPinned(boolean pinned) {
 		this.pinned = pinned;
 	}
-
 }

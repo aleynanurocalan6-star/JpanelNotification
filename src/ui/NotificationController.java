@@ -111,6 +111,10 @@ public class NotificationController {
 		notificationList.addAll(notifications);
 	}
 
+	public List<Notification> getNotificationList() {
+		return notificationList;
+	}
+
 	public NotificationPanel getView() {
 		return view;
 	}
